@@ -1,3 +1,4 @@
 import TeamRouter from './Team';
+import UserRouter from './User';
 
-export default TeamRouter;
+export { TeamRouter, UserRouter };
