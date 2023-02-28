@@ -12,11 +12,11 @@ chai.use(chaiHttp);
 
 const { expect } = chai;
 
-describe('Seu teste', () => {
+describe('Testes da rota /teams', () => {
 
   let chaiHttpResponse: Response;
 
-  before(async () => {
+  beforeEach(async () => {
     sinon
       .stub(TeamsModel, "findOne")
       .resolves({
@@ -25,7 +25,7 @@ describe('Seu teste', () => {
       } as TeamsModel);
   });
 
-  after(()=>{
+  afterEach(()=>{
     (TeamsModel.findOne as sinon.SinonStub).restore();
   })
 
@@ -35,7 +35,8 @@ describe('Seu teste', () => {
     expect(chaiHttpResponse.status).to.be.deep.equal(200);
   });
 
-  it('Seu sub-teste', () => {
-    expect(false).to.be.eq(true);
+  it('Deve retornar um time quando buscado pelo seu id', async () => {
+    chaiHttpResponse = await chai.request(app).get('/teams/1');
+    expect(chaiHttpResponse.status).to.be.deep.equal(200);
   });
 });
