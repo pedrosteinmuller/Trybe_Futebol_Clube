@@ -24,4 +24,12 @@ export default class MatchesService {
 
     return response(200, resultMatches);
   }
+
+  async finishMatch(id: number): Promise<IResponse> {
+    // Será validado que, ao finalizar uma partida
+    //  a alteração é feita no banco de dados e na página.
+    // com a informação acima, usamos o método update para fazer a atualizacao no banco
+    await this.model.update({ inProgress: false }, { where: { id } });
+    return response(200, { message: 'Finished' });
+  }
 }
