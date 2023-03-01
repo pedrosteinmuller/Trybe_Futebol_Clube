@@ -45,6 +45,7 @@ describe('Testes da rota /login', () => {
     email: '',
   }
 
+  const roleUser = { role: 'admin' }
   // beforeEach(async () => {
   //   sinon
   //     .stub(UsersModel, "findOne")
@@ -66,18 +67,22 @@ describe('Testes da rota /login', () => {
     expect(result.body).to.deep.equal({ message: 'All fields must be filled'});
   });
 
-  // it('Verifica que o password vazio, retorna uma mensagem de erro e status 400', async () => {
-  //   chaiHttpResponse = await chai
-  //     .request(app).post('/login').send(noPassword);
-  //   expect(chaiHttpResponse.status).to.be.equal(400);
-  //   expect(chaiHttpResponse.body.message).to.deep.equal('All fields must be filled');
-  // });
+  it('Verifica que o password vazio, retorna uma mensagem de erro e status 400', async () => {
+    sinon.stub(Model, 'findAll').resolves(userMock);
+    sinon.stub(bcrypt, 'compareSync').resolves(true);
 
-  // it('Verifica caso de sucesso com email e senha corretos', async () => {
-  //   chaiHttpResponse = await chai
-  //     .request(app).post('/login').send(loginCorrect);
-  //   expect(chaiHttpResponse.status).to.be.equal(200);
-  //   expect(chaiHttpResponse.body).not.to.be.empty;
-  //   expect(chaiHttpResponse.body).to.be.an('object');
-  // });
+    const result = await chai.request(app).post('/login').send(noPassword);
+    expect(result.status).to.be.equal(400);
+    expect(result.body).to.deep.equal({ message: 'All fields must be filled'});
+  });
+
+  it('Verifica caso de sucesso com email e senha corretos', async () => {
+    sinon.stub(Model, 'findAll').resolves(userMock);
+    sinon.stub(bcrypt, 'compareSync').resolves(true);
+
+    const result = await chai.request(app).post('/login').send(loginCorrect);
+    expect(result.status).to.be.equal(200);
+    expect(result.body).to.haveOwnProperty('token');
+  });
+
 });
