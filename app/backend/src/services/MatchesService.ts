@@ -3,6 +3,7 @@ import TeamsModel from '../database/models/TeamsModel';
 import MatchesModel from '../database/models/MatchesModel';
 import { response } from '../utils/generateResult';
 import IResponse from '../interfaces/IResponse';
+import IUpdateMatch from '../interfaces/IUpdateMatch';
 
 export default class MatchesService {
   protected model: ModelStatic<MatchesModel> = MatchesModel;
@@ -31,5 +32,13 @@ export default class MatchesService {
     // com a informação acima, usamos o método update para fazer a atualizacao no banco
     await this.model.update({ inProgress: false }, { where: { id } });
     return response(200, { message: 'Finished' });
+  }
+
+  async updateMatch(id: number, body: IUpdateMatch): Promise<IResponse> {
+    const matchToUpdate = await this.model.findByPk(id);
+    if (matchToUpdate?.inProgress) {
+      await this.model.update({ ...body }, { where: { id } });
+    }
+    return response(200, { message: 'Updated' });
   }
 }

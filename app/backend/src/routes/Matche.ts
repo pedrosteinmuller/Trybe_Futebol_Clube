@@ -11,4 +11,7 @@ matcheRouter.get('/', (req: Request, res: Response) => matchController.getAll(re
 matcheRouter.patch('/:id/finish', tokenMiddleware, (req: Request, res: Response) => matchController
   .finishMatch(req, res));
 
+matcheRouter.patch('/:id', tokenMiddleware, (req: Request, res: Response) =>
+  matchController.updatedMatch(req, res));
+
 export default matcheRouter;

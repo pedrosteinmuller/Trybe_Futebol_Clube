@@ -15,4 +15,10 @@ export default class MatchesController {
     const { status, message } = await this.matchesService.finishMatch(+id);
     res.status(status).json(message);
   }
+
+  async updatedMatch(req: Request, res: Response) {
+    const { id } = req.params;
+    const { status, message } = await this.matchesService.updateMatch(+id, req.body);
+    res.status(status).json(message);
+  }
 }
