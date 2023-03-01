@@ -15,6 +15,13 @@ export default class MatchesService {
       ],
     });
     if (!inProgress) return response(200, resultMatches);
+
+    const progressTrue = resultMatches.filter((matche) => matche.inProgress);
+    const progressFalse = resultMatches.filter((matche) => !matche.inProgress);
+
+    if (inProgress === 'true') return response(200, progressTrue);
+    if (inProgress === 'false') return response(200, progressFalse);
+
     return response(200, resultMatches);
   }
 }
