@@ -1,3 +1,4 @@
 import TeamsController from './TeamsController';
+import MatchesController from './MatchesController';
 
-export default TeamsController;
+export { TeamsController, MatchesController };
