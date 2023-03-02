@@ -7,7 +7,7 @@ import { Model } from 'sequelize';
 import { app } from '../app';
 
 import { Response } from 'superagent';
-import { mockMatch, mockInProgress } from './mocks/matchMock';
+import { mockMatch, mockInProgress, createMatche } from './mocks/matchMock';
 
 chai.use(chaiHttp);
 
@@ -73,5 +73,21 @@ it('Verifica o update do match quando utilizado um token válido', async () => {
 
   expect(result.status).to.be.equal(200);
   expect(result.body).to.deep.equal({ message: 'Updated' });
+});
+
+it('Verifica a criacao de uma match quando utilizado um token válido', async () => {
+  sinon.stub(Model, 'create').resolves(mockMatch[0]);
+
+  const result = await chai
+    .request(app)
+    .post('/matches')
+    .send(createMatche)
+    .set(
+      'Authorization',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXlsb2FkIjp7ImlkIjoxLCJlbWFpbCI6ImFkbWluQGFkbWluLmNvbSIsInJvbGUiOiJhZG1pbiIsInVzZXJuYW1lIjoiQWRtaW4ifSwiaWF0IjoxNjc3NTkxODEwLCJleHAiOjE2Nzg0NTU4MTB9.49swV3jOhW_qumAUVQBQqRpTUsJkD1JMqeXxoV8VZmI',
+    );
+
+  expect(result.status).to.be.equal(201);
+  expect(result.body).to.deep.equal(mockInProgress[0]);
 });
 })

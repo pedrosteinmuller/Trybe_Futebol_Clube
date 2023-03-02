@@ -8,6 +8,9 @@ const matcheRouter = Router();
 
 matcheRouter.get('/', (req: Request, res: Response) => matchController.getAll(req, res));
 
+matcheRouter.post('/', tokenMiddleware, (req: Request, res: Response) =>
+  matchController.createMatch(req, res));
+
 matcheRouter.patch('/:id/finish', tokenMiddleware, (req: Request, res: Response) => matchController
   .finishMatch(req, res));
 

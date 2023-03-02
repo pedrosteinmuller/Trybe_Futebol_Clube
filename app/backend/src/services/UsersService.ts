@@ -14,7 +14,6 @@ export default class UsersService {
     const user = await this.model.findOne(
       { where: { email: body.email } },
     );
-    console.log(user);
     const error = checkValidate(body);
     if (error) return responseError(401, 'Invalid email or password');
 

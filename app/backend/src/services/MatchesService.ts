@@ -4,6 +4,7 @@ import MatchesModel from '../database/models/MatchesModel';
 import { response } from '../utils/generateResult';
 import IResponse from '../interfaces/IResponse';
 import IUpdateMatch from '../interfaces/IUpdateMatch';
+import ICreateMatch from '../interfaces/ICreateMatch';
 
 export default class MatchesService {
   protected model: ModelStatic<MatchesModel> = MatchesModel;
@@ -40,5 +41,10 @@ export default class MatchesService {
       await this.model.update({ ...body }, { where: { id } });
     }
     return response(200, { message: 'Updated' });
+  }
+
+  async createMatch(body: ICreateMatch): Promise<IResponse> {
+    const createMatch = await this.model.create({ ...body, inProgress: true });
+    return response(201, createMatch);
   }
 }
