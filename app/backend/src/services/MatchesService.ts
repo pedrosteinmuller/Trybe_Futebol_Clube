@@ -1,7 +1,7 @@
 import { ModelStatic } from 'sequelize';
 import TeamsModel from '../database/models/TeamsModel';
 import MatchesModel from '../database/models/MatchesModel';
-import { response } from '../utils/generateResult';
+import { response, responseError } from '../utils/generateResult';
 import IResponse from '../interfaces/IResponse';
 import IUpdateMatch from '../interfaces/IUpdateMatch';
 import ICreateMatch from '../interfaces/ICreateMatch';
@@ -44,6 +44,17 @@ export default class MatchesService {
   }
 
   async createMatch(body: ICreateMatch): Promise<IResponse> {
+    if (body.homeTeamId === body.awayTeamId) {
+      return responseError(422, 'It is not possible to create a match with two equal teams');
+    }
+
+    const homeTeam = await this.model.findByPk(body.homeTeamId);
+    const awayTeam = await this.model.findByPk(body.awayTeamId);
+
+    if (!homeTeam || !awayTeam) {
+      return responseError(404, 'There is no team with such id!');
+    }
+
     const createMatch = await this.model.create({ ...body, inProgress: true });
     return response(201, createMatch);
   }
