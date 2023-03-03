@@ -11,9 +11,20 @@ export default class LeaderboardService {
   async getLeaderboardHome(): Promise<ILeaderboard[]> {
     const getTeam = await this.modelTeams.findAll();
     const getMatches = await this.modelMatches.findAll({ where: { inProgress: false } });
-    const result: ILeaderboard[] = getTeam.map((t) => {
-      const matche = getMatches.filter((m) => m.homeTeamId === t.id);
-      return objectResult(t.teamName, matche);
+    const result: ILeaderboard[] = getTeam.map((team) => {
+      const matche = getMatches.filter((match) => match.homeTeamId === team.id);
+      return objectResult(team.teamName, matche, ['homeTeamGoals', 'awayTeamGoals']);
+    });
+
+    return orderResults(result);
+  }
+
+  async getLeaderboardAway(): Promise<ILeaderboard[]> {
+    const getTeam = await this.modelTeams.findAll();
+    const getMatches = await this.modelMatches.findAll({ where: { inProgress: false } });
+    const result: ILeaderboard[] = getTeam.map((team) => {
+      const matche = getMatches.filter((match) => match.awayTeamId === team.id);
+      return objectResult(team.teamName, matche, ['awayTeamGoals', 'homeTeamGoals']);
     });
 
     return orderResults(result);

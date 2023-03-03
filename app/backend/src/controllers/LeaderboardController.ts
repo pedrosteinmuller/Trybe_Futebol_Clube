@@ -8,4 +8,9 @@ export default class leaderboardController {
     const result = await this.leaderboardService.getLeaderboardHome();
     res.status(200).json(result);
   }
+
+  async getResultsAway(_req: Request, res: Response) {
+    const result = await this.leaderboardService.getLeaderboardAway();
+    res.status(200).json(result);
+  }
 }
