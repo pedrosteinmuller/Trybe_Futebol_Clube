@@ -3,6 +3,10 @@ import MatchesModel from '../database/models/MatchesModel';
 
 type homeAwayGoals = 'homeTeamGoals' | 'awayTeamGoals';
 
+const arrayHomeAwayGoals: homeAwayGoals[] = ['homeTeamGoals', 'awayTeamGoals'];
+const array2HomeAwayGoals: homeAwayGoals[] = ['awayTeamGoals', 'homeTeamGoals'];
+
+
 export const goalCount = (matches: MatchesModel[], goaltype: homeAwayGoals) => {
   let totalGoals = 0;
   matches.forEach((match) => {
@@ -47,6 +51,13 @@ export const calculateEfficiency = (matche: MatchesModel[], goaltype: homeAwayGo
   return result.toFixed(2);
 };
 
+export const calculateAllEfficiency = (matcheHome: MatchesModel[], matcheAway: MatchesModel[]): string => {
+  const totalpoints = totalScore(matcheHome, arrayHomeAwayGoals) + totalScore(matcheAway, array2HomeAwayGoals);
+  const totalGames = matcheHome.length + matcheAway.length;
+  const result = (totalpoints / (totalGames * 3)) * 100;
+  return result.toFixed(2);
+};
+
 export const objectResult = (team: string, matche: MatchesModel[], goaltype:homeAwayGoals[]) => ({
   name: team,
   totalPoints: totalScore(matche, goaltype),
@@ -58,6 +69,19 @@ export const objectResult = (team: string, matche: MatchesModel[], goaltype:home
   goalsOwn: goalCount(matche, goaltype[1]),
   goalsBalance: totalScoreGoalsBalance(matche, goaltype),
   efficiency: calculateEfficiency(matche, goaltype),
+});
+
+export const objectResultAll = (team: string, matcheHome: MatchesModel[], matcheAway: MatchesModel[]) => ({
+  name: team,
+  totalPoints: totalScore(matcheHome, arrayHomeAwayGoals) + totalScore(matcheAway, array2HomeAwayGoals),
+  totalGames: matcheHome.length + matcheAway.length,
+  totalVictories: (getTeamResults(matcheHome, arrayHomeAwayGoals).victories + getTeamResults(matcheAway, array2HomeAwayGoals).victories),
+  totalDraws: (getTeamResults(matcheHome, arrayHomeAwayGoals).draws + getTeamResults(matcheAway, array2HomeAwayGoals).draws),
+  totalLosses: (getTeamResults(matcheHome, arrayHomeAwayGoals).losses + getTeamResults(matcheAway, array2HomeAwayGoals).losses),
+  goalsFavor: goalCount(matcheHome, arrayHomeAwayGoals[0]) + goalCount(matcheAway, arrayHomeAwayGoals[1]),
+  goalsOwn: goalCount(matcheHome, arrayHomeAwayGoals[1]) + goalCount(matcheAway, arrayHomeAwayGoals[0]),
+  goalsBalance: totalScoreGoalsBalance(matcheHome, arrayHomeAwayGoals) + totalScoreGoalsBalance(matcheAway, array2HomeAwayGoals),
+  efficiency: calculateAllEfficiency(matcheHome, matcheAway),
 });
 
 export const orderResults = (teams: ILeaderboard[]) =>

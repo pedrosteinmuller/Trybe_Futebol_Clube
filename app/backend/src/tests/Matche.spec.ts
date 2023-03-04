@@ -42,7 +42,7 @@ describe('Testes da rota /matches', () => {
  })
 
  it('Verifica finish do match quando utilizado um token válido', async () => {
-  sinon.stub(Model, 'update').resolves();
+  sinon.stub(Model, 'update').resolves([0]);
   // utilizei o método set após o patch para simular o token, passando o auth e o valor do token.
   const result = await chai
     .request(app)
