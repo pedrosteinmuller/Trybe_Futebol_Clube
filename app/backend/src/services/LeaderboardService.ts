@@ -1,5 +1,5 @@
 import { ModelStatic } from 'sequelize';
-import { orderResults, objectResult, objectResultAll } from '../utils/functionsLeaderboard';
+import { orderResults, objectResult, objectAll } from '../utils/functionsLeaderboard';
 import ILeaderboard from '../interfaces/ILeaderboard';
 import MatchesModel from '../database/models/MatchesModel';
 import TeamsModel from '../database/models/TeamsModel';
@@ -36,7 +36,7 @@ export default class LeaderboardService {
     const result: ILeaderboard[] = getTeam.map((team) => {
       const matcheHome = getMatches.filter((match) => match.homeTeamId === team.id);
       const matcheAway = getMatches.filter((match) => match.awayTeamId === team.id);
-      return objectResultAll(team.teamName, matcheHome, matcheAway);
+      return objectAll(team.teamName, matcheHome, matcheAway);
     });
 
     return orderResults(result);

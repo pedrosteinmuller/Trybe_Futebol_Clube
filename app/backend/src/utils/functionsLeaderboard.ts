@@ -6,7 +6,6 @@ type homeAwayGoals = 'homeTeamGoals' | 'awayTeamGoals';
 const arrayHomeAwayGoals: homeAwayGoals[] = ['homeTeamGoals', 'awayTeamGoals'];
 const array2HomeAwayGoals: homeAwayGoals[] = ['awayTeamGoals', 'homeTeamGoals'];
 
-
 export const goalCount = (matches: MatchesModel[], goaltype: homeAwayGoals) => {
   let totalGoals = 0;
   matches.forEach((match) => {
@@ -51,8 +50,12 @@ export const calculateEfficiency = (matche: MatchesModel[], goaltype: homeAwayGo
   return result.toFixed(2);
 };
 
-export const calculateAllEfficiency = (matcheHome: MatchesModel[], matcheAway: MatchesModel[]): string => {
-  const totalpoints = totalScore(matcheHome, arrayHomeAwayGoals) + totalScore(matcheAway, array2HomeAwayGoals);
+export const calculateAllEfficiency = (
+  matcheHome: MatchesModel[],
+  matcheAway: MatchesModel[],
+): string => {
+  const totalpoints = totalScore(matcheHome, arrayHomeAwayGoals)
+    + totalScore(matcheAway, array2HomeAwayGoals);
   const totalGames = matcheHome.length + matcheAway.length;
   const result = (totalpoints / (totalGames * 3)) * 100;
   return result.toFixed(2);
@@ -71,23 +74,23 @@ export const objectResult = (team: string, matche: MatchesModel[], goaltype: hom
   efficiency: calculateEfficiency(matche, goaltype),
 });
 
-export const objectResultAll = (team: string, matcheHome: MatchesModel[], matcheAway: MatchesModel[]) => ({
-  name: team,
+export const objectAll = (tea: string, matcheHome: MatchesModel[], matcheAway: MatchesModel[]) => ({
+  name: tea,
   totalPoints: totalScore(matcheHome, arrayHomeAwayGoals)
-   + totalScore(matcheAway, array2HomeAwayGoals),
+    + totalScore(matcheAway, array2HomeAwayGoals),
   totalGames: matcheHome.length + matcheAway.length,
   totalVictories: (getTeamResults(matcheHome, arrayHomeAwayGoals).victories
-   + getTeamResults(matcheAway, array2HomeAwayGoals).victories),
+    + getTeamResults(matcheAway, array2HomeAwayGoals).victories),
   totalDraws: (getTeamResults(matcheHome, arrayHomeAwayGoals).draws
-   + getTeamResults(matcheAway, array2HomeAwayGoals).draws),
+    + getTeamResults(matcheAway, array2HomeAwayGoals).draws),
   totalLosses: (getTeamResults(matcheHome, arrayHomeAwayGoals).losses
-   + getTeamResults(matcheAway, array2HomeAwayGoals).losses),
+    + getTeamResults(matcheAway, array2HomeAwayGoals).losses),
   goalsFavor: goalCount(matcheHome, arrayHomeAwayGoals[0])
-   + goalCount(matcheAway, arrayHomeAwayGoals[1]),
+    + goalCount(matcheAway, arrayHomeAwayGoals[1]),
   goalsOwn: goalCount(matcheHome, arrayHomeAwayGoals[1])
-   + goalCount(matcheAway, arrayHomeAwayGoals[0]),
+    + goalCount(matcheAway, arrayHomeAwayGoals[0]),
   goalsBalance: totalScoreGoalsBalance(matcheHome, arrayHomeAwayGoals)
-   + totalScoreGoalsBalance(matcheAway, array2HomeAwayGoals),
+    + totalScoreGoalsBalance(matcheAway, array2HomeAwayGoals),
   efficiency: calculateAllEfficiency(matcheHome, matcheAway),
 });
 
