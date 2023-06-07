@@ -16,37 +16,88 @@ O back-end do TFC possui regras de negócio específicas para popular a tabela d
 - **Back-end**: `Javascript`, `Typescript`, `Node.js`, `POO`, `SOLID`, `Docker`, `Sequelize`
 - **Testes**: `Mocha`, `chai`, `sinon`, `jest`.
 
-<h2>Rodando o Projeto (Docker 🐋)</h2>
+### Instruções
 
-1. Clone o repositório em sua máquina local.
+- Para rodar o repositório localmente, realize o clone do projeto e utilize o comando a seguir para inicializar o Docker (front-end, back-end e banco de dados):
 
-2. Certifique-se de ter o docker-compose instalado.
-
-3. Execute o comando `npm run compose:up` para iniciar a aplicação ou acesse a pasta `app` e rode com o comando `docker-compose up -d --build`.
-
-4. Acesse o endereço http://localhost:3000 para acessar o site e http://localhost:3001 para acessar a API.
-
-⚠️ **Atenção** ⚠️ Caso opte por utilizar o Docker, TODOS os comandos disponíveis no package.json (npm start, npm test, npm run dev, ...) devem ser executados DENTRO do container, ou seja, no terminal que aparece após a execução do comando docker exec citado acima.
-
-⚠️ **Atenção** ⚠️ O git dentro do container não vem configurado com suas credenciais. Faça os commits fora do container, ou configure as suas credenciais do git dentro do container.
-
-⚠️ **Atenção** ⚠️ Não rode o comando npm audit fix! Ele atualiza várias dependências do projeto, e essa atualização gera conflitos com o avaliador.
-
-⚠️ **Atenção** ⚠️ Caso você esteja usando macOS e ao executar o docker-compose up -d se depare com o seguinte erro:
-
-```typescript
-The Compose file './docker-compose.yml' is invalid because:
-Unsupported config option for services.db: 'platform'
-Unsupported config option for services.node: 'platform'
+```
+npm run compose:up
+npm run compose:down // para parar completamente a aplicação
 ```
 
-<details>
-  <summary><strong>🤷🏽‍♀️ Foram encontradas 2 possíveis soluções para este problema:</strong></summary><br />
+E utilize os comandos a seguir para executar os testes de integração criado:
 
-- Você pode adicionar manualmente a option platform: linux/amd64 no service do banco de dados no arquivo docker-compose.yml do projeto, mas essa é uma solução local e você deverá reproduzir isso para os outros projetos.
+```
+npm install // para instalar as dependências
+cd app/backend && npm test
+```
 
-- Você pode adicionar manualmente nos arquivos .bashrc, .zshenv ou .zshrc do seu computador a linha export DOCKER_DEFAULT_PLATFORM=linux/amd64, essa é uma solução global. As soluções foram com base nesta fonte.
-</details>
+### Endpoints
+
+#### Login
+
+| Método | Funcionalidade | URL |
+|---|---|---|
+| `POST` | Realiza o login do usuário | http://localhost:3001/login |
+| `GET` | Avalia se o usuário é o administrador | http://localhost:3001/login/validate |
+
+Nessa requisição POST é necessário informar o seguinte JSON:
+
+```
+{
+  "email": "Nome do Usuário",
+  "password": "senha_secreta"
+}
+```
+
+
+#### Times
+
+| Método | Funcionalidade | URL |
+|---|---|---|
+| `GET` | Retorna todos os times cadastrados | http://localhost:3001/teams |
+| `GET` | Retorna um time específico | http://localhost:3001/teams/:id |
+
+
+#### Partidas
+
+| Método | Funcionalidade | URL |
+|---|---|---|
+| `GET` | Retorna todos as partidas cadastradas | http://localhost:3001/matches |
+| `GET` | Retorna todos as partidas cadastradas em progresso | http://localhost:3001/matches?inProgress=true |
+| `GET` | Retorna todos as partidas cadastradas finalizadas | http://localhost:3001/matches?inProgress=false |
+| `POST` | Criação de uma nova partida | http://localhost:3001/matches |
+| `PATCH` | Atualiza a chave 'inProgress' para finalidado de uma partida específica | http://localhost:3001/matches/:id/finish |
+| `PATCH` | Atualiza os gols de uma partida específica | http://localhost:3001/matches/:id |
+
+Nessa requisição POST é necessário informar o seguinte JSON:
+
+```
+{
+  "homeTeam": 16, // O valor deve ser o id do time
+  "awayTeam": 8, // O valor deve ser o id do time
+  "homeTeamGoals": 2,
+  "awayTeamGoals": 2,
+  "inProgress": true
+}
+```
+
+e na requisição PATCH para atualizar os gols realizados é necessário informar o seguinte JSON:
+
+```
+{
+  "homeTeamGoals": 3,
+  "awayTeamGoals": 1
+}
+```
+
+#### Placar
+
+| Método | Funcionalidade | URL |
+|---|---|---|
+| `GET` | Retorna a classificação geral dos times | http://localhost:3001/leaderboard |
+| `GET` | Retorna a classificação dos times mandantes | http://localhost:3001/leaderboard/home |
+| `GET` | Retorna a classificação dos times visitantes | http://localhost:3001/leaderboard/away |
 
 Entre em contato comigo, caso queira dar sugestões, críticas, opiniões sobre esse e/ou outros projetos que estão em meu portfólio, bem como qualquer assunto de seu interesse que queira discutir comigo, fique a vontade!
 
